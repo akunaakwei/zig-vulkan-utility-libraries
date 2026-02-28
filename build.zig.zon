@@ -4,12 +4,12 @@
     .minimum_zig_version = "0.14.1",
     .dependencies = .{
         .vulkan_utility_libraries = .{
-            .url = "https://github.com/KhronosGroup/Vulkan-Utility-Libraries/archive/ec329e2721921f79743b90307ee047d08e057788.tar.gz",
-            .hash = "N-V-__8AAPp0bACTW_aF5stL8ZodGS_ByJOXBonHsO_RoVJ1",
+            .url = "https://github.com/KhronosGroup/Vulkan-Utility-Libraries/archive/738ec97a3f659dd6469bff3c4078ef981b0a343f.tar.gz",
+            .hash = "N-V-__8AAE_pggAHjDFLIIhAA3QuCSCOusNv1AcOEUAXP0iF",
         },
         .vulkan_headers = .{
-            .url = "https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.4.321.tar.gz",
-            .hash = "N-V-__8AAI7-AQIsx0GGCNZVZDEQ-EhVjVd915WjwOOiSSA-",
+            .url = "https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.4.344.tar.gz",
+            .hash = "N-V-__8AALnKOwISs8TmtQCFcJgDTE9kRnMhQCrbaafF5DD0",
         },
     },
     .paths = .{

@@ -9,18 +9,14 @@ pub fn build(b: *std.Build) void {
     const vulkan_utility_libraries_dep = b.dependency("vulkan_utility_libraries", .{});
     const vulkan_headers_dep = b.dependency("vulkan_headers", .{});
 
-    const vulkan_safe_struct = b.addLibrary(.{
-        .name = "VulkanSafeStruct",
-        .linkage = linkage,
-        .root_module = b.createModule(.{
-            .target = target,
-            .optimize = optimize,
-        }),
+    const vulkan_safe_struct_mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
+        .link_libcpp = true,
     });
-    vulkan_safe_struct.linkLibCpp();
-    vulkan_safe_struct.addIncludePath(vulkan_utility_libraries_dep.path("include"));
-    vulkan_safe_struct.addIncludePath(vulkan_headers_dep.path("include"));
-    vulkan_safe_struct.addCSourceFiles(.{
+    vulkan_safe_struct_mod.addIncludePath(vulkan_utility_libraries_dep.path("include"));
+    vulkan_safe_struct_mod.addIncludePath(vulkan_headers_dep.path("include"));
+    vulkan_safe_struct_mod.addCSourceFiles(.{
         .root = vulkan_utility_libraries_dep.path("src/vulkan"),
         .files = &.{
             "vk_safe_struct_core.cpp",
@@ -30,6 +26,12 @@ pub fn build(b: *std.Build) void {
             "vk_safe_struct_vendor.cpp",
             "vk_safe_struct_manual.cpp",
         },
+    });
+
+    const vulkan_safe_struct = b.addLibrary(.{
+        .name = "VulkanSafeStruct",
+        .linkage = linkage,
+        .root_module = vulkan_safe_struct_mod,
     });
     vulkan_safe_struct.installHeader(
         vulkan_utility_libraries_dep.path("include/vulkan/utility/vk_safe_struct.hpp"),
@@ -41,18 +43,14 @@ pub fn build(b: *std.Build) void {
     );
     b.installArtifact(vulkan_safe_struct);
 
-    const vulkan_layer_settings = b.addLibrary(.{
-        .name = "VulkanLayerSettings",
-        .linkage = linkage,
-        .root_module = b.createModule(.{
-            .target = target,
-            .optimize = optimize,
-        }),
+    const vulkan_layer_settings_mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
+        .link_libcpp = true,
     });
-    vulkan_layer_settings.linkLibCpp();
-    vulkan_layer_settings.addIncludePath(vulkan_utility_libraries_dep.path("include"));
-    vulkan_layer_settings.addIncludePath(vulkan_headers_dep.path("include"));
-    vulkan_layer_settings.addCSourceFiles(.{
+    vulkan_layer_settings_mod.addIncludePath(vulkan_utility_libraries_dep.path("include"));
+    vulkan_layer_settings_mod.addIncludePath(vulkan_headers_dep.path("include"));
+    vulkan_layer_settings_mod.addCSourceFiles(.{
         .root = vulkan_utility_libraries_dep.path("src/layer"),
         .files = &.{
             "vk_layer_settings.cpp",
@@ -60,6 +58,12 @@ pub fn build(b: *std.Build) void {
             "layer_settings_manager.cpp",
             "layer_settings_util.cpp",
         },
+    });
+
+    const vulkan_layer_settings = b.addLibrary(.{
+        .name = "VulkanLayerSettings",
+        .linkage = linkage,
+        .root_module = vulkan_layer_settings_mod,
     });
     vulkan_layer_settings.installHeader(
         vulkan_utility_libraries_dep.path("include/vulkan/layer/vk_layer_settings.h"),
@@ -71,20 +75,20 @@ pub fn build(b: *std.Build) void {
     );
     b.installArtifact(vulkan_layer_settings);
 
-    const vulkan_utility = b.addLibrary(.{
-        .name = "VulkanUtility",
-        .linkage = linkage,
-        .root_module = b.createModule(.{
-            .target = target,
-            .optimize = optimize,
-        }),
+    const vulkan_utility_mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
     });
     // this is a header only library, but to expose an artifact we need atleast a single object file
     // exposing a header makes including all the installed headers easy
     const empty_wf = b.addWriteFile("empty.cc", "");
     const empty = empty_wf.getDirectory().path(b, "empty.cc");
-    vulkan_utility.addCSourceFile(.{ .file = empty });
+    vulkan_utility_mod.addCSourceFile(.{ .file = empty });
 
+    const vulkan_utility = b.addLibrary(.{
+        .name = "VulkanUtility",
+        .root_module = vulkan_utility_mod,
+    });
     vulkan_utility.installHeader(
         vulkan_utility_libraries_dep.path("include/vulkan/layer/vk_layer_settings.h"),
         "vulkan/layer/vk_layer_settings.h",

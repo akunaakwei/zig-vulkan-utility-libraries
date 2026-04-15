@@ -1,7 +1,7 @@
 .{
     .name = .vulkan_utility_libraries,
     .version = "0.0.0",
-    .minimum_zig_version = "0.14.1",
+    .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .vulkan_utility_libraries = .{
             .url = "https://github.com/KhronosGroup/Vulkan-Utility-Libraries/archive/738ec97a3f659dd6469bff3c4078ef981b0a343f.tar.gz",
